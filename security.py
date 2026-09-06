@@ -2,7 +2,7 @@ import jwt
 from datetime import datetime, timezone, timedelta
 from pwdlib import PasswordHash
 from config import settings
-from exceptions.authentication_exception import InvalidRefreshTokenException, RefreshTokenExpiredException
+from exceptions.authentication_exception import AccessTokenExpiredException, InvalidAccessTokenException, InvalidRefreshTokenException, RefreshTokenExpiredException
 
 
 SECRET_KEY = settings.secret_key
@@ -36,6 +36,11 @@ def decode_refresh_token(refresh_token: str):
         raise InvalidRefreshTokenException()
     return payload
 
-def decode_access_token(refresh_token: str):
-    payload = _decode_token(refresh_token)
+def decode_access_token(access_token: str):
+    try:
+        payload = _decode_token(access_token)
+    except jwt.ExpiredSignatureError:
+        raise AccessTokenExpiredException()
+    except jwt.InvalidTokenError:
+        raise InvalidAccessTokenException()
     return payload
