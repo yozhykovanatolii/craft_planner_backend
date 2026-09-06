@@ -19,3 +19,8 @@ class UserInfoSchema(BaseModel):
     email: EmailStr
     phone_number: str
     avatar_url: str
+    
+class UserUpdateSchema(BaseModel):
+    full_name: FullNameStr
+    phone_number: str = Field(pattern=r'^\+380\d{9}$')
+    avatar_url: str = Field(min_length=1)

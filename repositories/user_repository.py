@@ -21,3 +21,7 @@ class UserRepository:
     
     async def get_user_by_id(self, user_id: int):
         return await self.__db.get(User, user_id)
+    
+    async def update_user(self, update_data: dict):
+        await self.__db.execute(update(User), [update_data])
+        await self.__db.commit()
