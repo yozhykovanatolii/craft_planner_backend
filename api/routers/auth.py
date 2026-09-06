@@ -14,4 +14,5 @@ async def register_user(user_register: UserRegisterSchema, auth_service: AuthSer
 
 @auth_router.post('/login', status_code = status.HTTP_200_OK)
 async def login_user(user_login: UserLoginSchema, auth_service: AuthServiceDependency):
+    await auth_service.login_user(user_login)
     return {'message': 'Success log in'}
