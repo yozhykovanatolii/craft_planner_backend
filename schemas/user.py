@@ -6,3 +6,7 @@ class UserRegisterSchema(BaseModel):
     email: EmailStr
     password: PasswordStr
     phone_number: str = Field(pattern=r'^\+380\d{9}$')
+    
+class UserLoginSchema(BaseModel):
+    email: EmailStr
+    password: PasswordStr
