@@ -1,8 +1,9 @@
 from exceptions.authentication_exception import PasswordNotVerifiedException, UserNotFoundException
 from exceptions.email_already_used_exception import EmailAlreadyUsedException
 from repositories.user_repository import UserRepository
+from schemas.token import TokenSchema
 from schemas.user import UserLoginSchema, UserRegisterSchema
-from security import get_password_hash, verify_password
+from security import create_token, get_password_hash, verify_password
 
 class AuthService:
     def __init__(self, user_repository: UserRepository):
@@ -22,3 +23,6 @@ class AuthService:
         is_password_verified = verify_password(user_login.password, db_user.password)
         if not is_password_verified:
             raise PasswordNotVerifiedException()
+        access_token = create_token(token_data = {'sub': str(db_user.id)}, expires_time_minutes = 30, token_type = 'access')
+        refresh_token = create_token(token_data = {'sub': str(db_user.id)}, expires_time_minutes = 43200, token_type = 'refresh')
+        return TokenSchema(access_token = access_token, refresh_token = refresh_token)
