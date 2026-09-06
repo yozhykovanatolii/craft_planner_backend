@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 from schemas.validators import FullNameStr, PasswordStr
 
 class UserRegisterSchema(BaseModel):
@@ -10,3 +10,12 @@ class UserRegisterSchema(BaseModel):
 class UserLoginSchema(BaseModel):
     email: EmailStr
     password: PasswordStr
+    
+class UserInfoSchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    
+    id: int
+    full_name: FullNameStr
+    email: EmailStr
+    phone_number: str
+    avatar_url: str

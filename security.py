@@ -35,3 +35,7 @@ def decode_refresh_token(refresh_token: str):
     except jwt.InvalidTokenError:
         raise InvalidRefreshTokenException()
     return payload
+
+def decode_access_token(refresh_token: str):
+    payload = _decode_token(refresh_token)
+    return payload
