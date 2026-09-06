@@ -1,9 +1,9 @@
-from exceptions.authentication_exception import PasswordNotVerifiedException, UserNotFoundException
+from exceptions.authentication_exception import PasswordNotVerifiedException, TokenTypeException, UserNotFoundException
 from exceptions.email_already_used_exception import EmailAlreadyUsedException
 from repositories.user_repository import UserRepository
 from schemas.token import TokenSchema
 from schemas.user import UserLoginSchema, UserRegisterSchema
-from security import create_token, get_password_hash, verify_password
+from security import create_token, decode_refresh_token, get_password_hash, verify_password
 
 class AuthService:
     def __init__(self, user_repository: UserRepository):
@@ -26,3 +26,15 @@ class AuthService:
         access_token = create_token(token_data = {'sub': str(db_user.id)}, expires_time_minutes = 30, token_type = 'access')
         refresh_token = create_token(token_data = {'sub': str(db_user.id)}, expires_time_minutes = 43200, token_type = 'refresh')
         return TokenSchema(access_token = access_token, refresh_token = refresh_token)
+    
+    async def refresh_token(self, token: str):
+        payload = decode_refresh_token(token)
+        token_type = payload.get('type')
+        if token_type != 'refresh':
+            raise TokenTypeException()
+        user_id = int(payload.get('sub'))
+        db_user = await self.__user_repository.get_user_by_id(user_id)
+        if db_user is None:
+            raise UserNotFoundException()
+        access_token = create_token(token_data = {'sub': str(user_id)}, expires_time_minutes = 30, token_type = 'access')
+        return TokenSchema(access_token = access_token)

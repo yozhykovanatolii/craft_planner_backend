@@ -16,3 +16,25 @@ class UserNotFoundException(AuthenticationException):
             message="User was not found",
             error_code="user_not_found",
         )
+        
+class RefreshTokenExpiredException(AuthenticationException):
+    def __init__(self):
+        super().__init__(
+            message="Refresh token has expired",
+            error_code="refresh_token_expired",
+        )
+
+
+class InvalidRefreshTokenException(AuthenticationException):
+    def __init__(self):
+        super().__init__(
+            message="Invalid refresh token",
+            error_code="invalid_refresh_token",
+        )
+        
+class TokenTypeException(AuthenticationException):
+    def __init__(self):
+        super().__init__(
+            message="Invalid token type",
+            error_code="invalid_token_type",
+        )

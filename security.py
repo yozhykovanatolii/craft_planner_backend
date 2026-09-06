@@ -2,6 +2,7 @@ import jwt
 from datetime import datetime, timezone, timedelta
 from pwdlib import PasswordHash
 from config import settings
+from exceptions.authentication_exception import InvalidRefreshTokenException, RefreshTokenExpiredException
 
 
 SECRET_KEY = settings.secret_key
@@ -22,3 +23,15 @@ def create_token(token_data: dict, expires_time_minutes, token_type: str):
     payload.update({'exp': expire, 'type': token_type})
     encode_jwt = jwt.encode(payload, SECRET_KEY, algorithm = ALGORITHM)
     return encode_jwt
+
+def _decode_token(token: str):
+    return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+
+def decode_refresh_token(refresh_token: str):
+    try:
+        payload = _decode_token(refresh_token)
+    except jwt.ExpiredSignatureError:
+        raise RefreshTokenExpiredException()
+    except jwt.InvalidTokenError:
+        raise InvalidRefreshTokenException()
+    return payload

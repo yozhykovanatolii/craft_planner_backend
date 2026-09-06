@@ -1,6 +1,7 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends, status
 from api.dependencies import get_auth_service
+from schemas.token import TokenSchema
 from schemas.user import UserLoginSchema, UserRegisterSchema
 from services.auth_service import AuthService
 
@@ -15,3 +16,7 @@ async def register_user(user_register: UserRegisterSchema, auth_service: AuthSer
 @auth_router.post('/login', status_code = status.HTTP_200_OK)
 async def login_user(user_login: UserLoginSchema, auth_service: AuthServiceDependency):
     return await auth_service.login_user(user_login)
+
+@auth_router.post('/refresh', status_code = status.HTTP_200_OK, response_model = TokenSchema, response_model_exclude_none = True)
+async def refresh_token(token: str | None, auth_service: AuthServiceDependency):
+    return await auth_service.refresh_token(token)
