@@ -2,6 +2,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     secret_key: str
+    supabase_project_url: str
+    supabase_anon_key: str
     postgres_password: str 
     postgres_host: str 
     postgres_port: int 
