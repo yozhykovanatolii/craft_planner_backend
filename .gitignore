@@ -17,3 +17,6 @@ __pycache__/
 # Environments
 .env
 .venv
+
+# Test data
+.sav.json
