@@ -9,6 +9,9 @@ class Settings(BaseSettings):
     postgres_port: int 
     postgres_db: str
     postgres_user: str
+    neo4j_uri: str 
+    neo4j_username: str 
+    neo4j_password: str 
     
     model_config = SettingsConfigDict(env_file=".env")
     

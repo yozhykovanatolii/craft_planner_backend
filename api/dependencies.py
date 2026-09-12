@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from clients.supabase_storage_client import SupabaseStorageClient
-from database import get_db
+from database.postgresql import get_postgresql_db
 from repositories.user_repository import UserRepository
 from sqlalchemy.ext.asyncio import AsyncSession
 from services.auth_service import AuthService
@@ -25,6 +25,6 @@ def get_user_service(user_Repository: UserRepositoryDependency, supabase_storage
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], user_Service: Annotated[UserService, Depends(get_user_service)]):
     return await user_Service.get_user(token)
 
-DatabaseSession = Annotated[AsyncSession, Depends(get_db)]
+DatabaseSession = Annotated[AsyncSession, Depends(get_postgresql_db)]
 UserRepositoryDependency = Annotated[UserRepository, Depends(get_user_repository)]
 SupabaseStorageClientDependency = Annotated[SupabaseStorageClient, Depends(get_supabase_storage_client)]

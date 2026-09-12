@@ -1,14 +1,18 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from database import init_db
+from database.postgresql import init_postgresql_db
+from database import neo4j
 from api.router import api_router
 from exceptions.error_handlers import register_error_handlers
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    await init_db()
+    await init_postgresql_db()
+    await neo4j.connect_neo4j()
+    await neo4j.create_constraints_neo4j()
     yield
+    await neo4j.close_neo4j()
     
     
 app = FastAPI(lifespan=lifespan)
