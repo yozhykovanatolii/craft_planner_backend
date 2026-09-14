@@ -18,9 +18,25 @@ async def import_recipes(file_path: str):
                 for ingredient in recipe.get("Ingredients", [])
             ],
         }
-        for recipe in recipes_data
+        for recipe in recipes_data['Recipes']
+    ]
+    items = [
+        {
+            "id": item["Id"],
+            "display_name": item["DisplayName"],
+        }
+        for item in recipes_data["Items"]
     ]
     async with driver.session() as session:
+        await session.run(
+            """
+            UNWIND $items AS item
+            MERGE (i:Item {id: item.id})
+
+            SET i.display_name = item.display_name
+            """,
+            items=items,
+        )
         await session.run(
             """
             UNWIND $recipes AS recipe
