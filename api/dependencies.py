@@ -6,6 +6,7 @@ from database.postgresql import get_postgresql_db
 from repositories.user_repository import UserRepository
 from sqlalchemy.ext.asyncio import AsyncSession
 from services.auth_service import AuthService
+from services.resource_service import ResourceService
 from services.user_service import UserService
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth/login')
@@ -21,6 +22,9 @@ def get_auth_service(user_repository: UserRepositoryDependency):
 
 def get_user_service(user_Repository: UserRepositoryDependency, supabase_storage_client: SupabaseStorageClientDependency):
     return UserService(user_Repository, supabase_storage_client)
+
+def get_resource_service():
+    return ResourceService()
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], user_Service: Annotated[UserService, Depends(get_user_service)]):
     return await user_Service.get_user(token)
