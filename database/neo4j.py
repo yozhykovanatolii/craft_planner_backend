@@ -24,3 +24,7 @@ async def create_constraints_neo4j():
             FOR (i:Item)
             REQUIRE i.id IS UNIQUE
         """)
+        
+async def get_neo4j_session():
+    async with driver.session() as session:
+        yield session

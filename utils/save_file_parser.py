@@ -17,13 +17,10 @@ def parse_player_save_file(
             "Invalid save structure: Properties not found"
         )
 
-    recipes = _get_unlocked_recipes(properties)
+    unlocked_recipes = _get_unlocked_recipes(properties)
     inventory = _get_inventory(properties)
     
-    return {
-        "recipes": recipes,
-        "inventory": inventory,
-    }
+    return unlocked_recipes, inventory
 
 
 def _load_json(file: BinaryIO) -> dict:

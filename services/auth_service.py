@@ -1,5 +1,5 @@
 from exceptions.authentication_exception import PasswordNotVerifiedException, TokenTypeException, UserNotFoundException
-from exceptions.email_already_used_exception import EmailAlreadyUsedException
+from exceptions.conflict_exception import EmailAlreadyUsedException
 from repositories.user_repository import UserRepository
 from schemas.token import TokenSchema
 from schemas.user import UserLoginSchema, UserRegisterSchema

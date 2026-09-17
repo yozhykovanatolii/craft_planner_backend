@@ -2,7 +2,9 @@ from typing import Annotated
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from clients.supabase_storage_client import SupabaseStorageClient
+from database.neo4j import get_neo4j_session
 from database.postgresql import get_postgresql_db
+from repositories.recipe_repository import RecipeRepository
 from repositories.user_repository import UserRepository
 from sqlalchemy.ext.asyncio import AsyncSession
 from services.auth_service import AuthService
@@ -14,7 +16,10 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth/login')
 def get_supabase_storage_client():
     return SupabaseStorageClient()
 
-def get_user_repository(db: DatabaseSession):
+def get_recipe_repository(db: Neo4jSession):
+    return RecipeRepository(db)
+
+def get_user_repository(db: PostgreSQLSession):
     return UserRepository(db)
 
 def get_auth_service(user_repository: UserRepositoryDependency):
@@ -23,12 +28,14 @@ def get_auth_service(user_repository: UserRepositoryDependency):
 def get_user_service(user_Repository: UserRepositoryDependency, supabase_storage_client: SupabaseStorageClientDependency):
     return UserService(user_Repository, supabase_storage_client)
 
-def get_resource_service():
-    return ResourceService()
+def get_resource_service(recipe_repository: RecipeRepositoryDependency):
+    return ResourceService(recipe_repository)
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], user_Service: Annotated[UserService, Depends(get_user_service)]):
     return await user_Service.get_user(token)
 
-DatabaseSession = Annotated[AsyncSession, Depends(get_postgresql_db)]
+PostgreSQLSession = Annotated[AsyncSession, Depends(get_postgresql_db)]
+Neo4jSession = Annotated[AsyncSession, Depends(get_neo4j_session)]
 UserRepositoryDependency = Annotated[UserRepository, Depends(get_user_repository)]
+RecipeRepositoryDependency = Annotated[RecipeRepository, Depends(get_recipe_repository)]
 SupabaseStorageClientDependency = Annotated[SupabaseStorageClient, Depends(get_supabase_storage_client)]

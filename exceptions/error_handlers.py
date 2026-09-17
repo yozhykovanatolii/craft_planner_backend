@@ -2,8 +2,9 @@ from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from exceptions.authentication_exception import AuthenticationException
-from exceptions.email_already_used_exception import EmailAlreadyUsedException
+from exceptions.conflict_exception import ConflictException
 from exceptions.media_type_exception import MediaTypeException
+from exceptions.recipe_not_found_exception import RecipeNotFoundException
 
 def register_error_handlers(app: FastAPI):
     @app.exception_handler(AuthenticationException)
@@ -16,8 +17,8 @@ def register_error_handlers(app: FastAPI):
             }
         )
         
-    @app.exception_handler(EmailAlreadyUsedException)
-    def email_already_use_exception_handler(_: Request, exception: EmailAlreadyUsedException):
+    @app.exception_handler(ConflictException)
+    def conflict_exception_handler(_: Request, exception: ConflictException):
         return JSONResponse(
             status_code=status.HTTP_409_CONFLICT,
             content={
@@ -30,6 +31,16 @@ def register_error_handlers(app: FastAPI):
     def media_type_exception_handler(_: Request, exception: MediaTypeException):
         return JSONResponse(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            content={
+                'error_code': exception.error_code,
+                'message': exception.message,
+            }
+        )
+        
+    @app.exception_handler(RecipeNotFoundException)
+    def recipe_not_exception_handler(_: Request, exception: RecipeNotFoundException):
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
             content={
                 'error_code': exception.error_code,
                 'message': exception.message,

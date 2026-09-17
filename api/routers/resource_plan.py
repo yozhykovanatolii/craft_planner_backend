@@ -10,4 +10,4 @@ ResourceServiceDependency = Annotated[ResourceService, Depends(get_resource_serv
 @resource_plan_router.post('', status_code = status.HTTP_201_CREATED)
 async def create_resource_plan(target_name: Annotated[str, Form(min_length=2, strip_whitespace=True)], target_quantity: Annotated[int, Form(gt=0)], player_file: Annotated[UploadFile, File()], resource_service: ResourceServiceDependency):
     file_bytes = await player_file.read()
-    return resource_service.create_resource_plan(target_name, target_quantity, file_bytes, player_file.filename)
+    return await resource_service.create_resource_plan(target_name, target_quantity, file_bytes, player_file.filename)
