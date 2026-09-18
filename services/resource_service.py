@@ -13,7 +13,15 @@ class ResourceService:
         recipe_records = await self.__recipe_repository.get_recipe_graph_by_item_name(target_name)
         if not recipe_records:
             raise RecipeNotFoundException()
-        recipe_id = recipe_records[0]["recipe_id"]
+        recipe_id = recipe_records['recipe_id']
+        recipe_ingredients = recipe_records['ingredients']
         if recipe_id not in player_unlocked_recipes:
             raise RecipeLockedException(recipe_id)
+        calculated_ingredients = [
+            {
+                "item_id": ingredient["item_id"],
+                "quantity": ingredient["quantity"] * target_quantity,
+            }
+            for ingredient in recipe_ingredients
+        ]
         return recipe_records

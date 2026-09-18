@@ -9,10 +9,10 @@ from exceptions.error_handlers import register_error_handlers
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     await init_postgresql_db()
-    #await neo4j.connect_neo4j()
-    #await neo4j.create_constraints_neo4j()
+    await neo4j.connect_neo4j()
+    await neo4j.create_constraints_neo4j()
     yield
-    #await neo4j.close_neo4j()
+    await neo4j.close_neo4j()
     
     
 app = FastAPI(lifespan=lifespan)

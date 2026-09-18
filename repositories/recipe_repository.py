@@ -16,5 +16,17 @@ class RecipeRepository:
             """,
             display_name=item_display_name
         )
-        return [record async for record in result]
+        records = [record async for record in result]
+        if not records:
+            return None
+        return {
+            "recipe_id": records[0]["recipe_id"],
+            "ingredients": [
+                {
+                    "item_id": record["ingredient_id"],
+                    "quantity": record["quantity"],
+                }
+                for record in records
+            ]
+        }
         
