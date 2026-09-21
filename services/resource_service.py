@@ -25,6 +25,22 @@ class ResourceService:
             for ingredient in recipe_ingredients
         ]
         calculated_ingredients = self.__check_inventory(calculated_ingredients, player_inventory)
+        missing_ingredients = [
+            {
+                "item_id": ingredient["item_id"],
+                "missing_quantity": ingredient["missing_quantity"],
+            }
+            for ingredient in calculated_ingredients
+            if ingredient['missing_quantity'] > 0
+        ]
+        existing_ingredients = [
+            {
+                "item_id": ingredient["item_id"],
+                "quantity": ingredient["inventory_quantity"],
+            }
+            for ingredient in calculated_ingredients
+            if ingredient['inventory_quantity'] > 0
+        ]
         return calculated_ingredients
     
     
