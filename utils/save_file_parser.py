@@ -99,17 +99,18 @@ def _get_inventory(properties: list) -> list[dict]:
 
     items = inventory_property["Value"]["Items"]
 
-    inventory = []
+    inventory = {}
 
     for item in items:
         item_properties = item["Value"]
 
         name = _get_item_name(item_properties)
         quantity = _get_item_quantity(item_properties)
+        
+        if name == "Empty":
+            continue
 
-        inventory.append({
-            name: quantity
-        })
+        inventory[name] = inventory.get(name, 0) + quantity
 
     return inventory
 

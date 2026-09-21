@@ -20,8 +20,20 @@ class ResourceService:
         calculated_ingredients = [
             {
                 "item_id": ingredient["item_id"],
-                "quantity": ingredient["quantity"] * target_quantity,
+                "required_quantity": ingredient["quantity"] * target_quantity,
             }
             for ingredient in recipe_ingredients
         ]
-        return recipe_records
+        calculated_ingredients = self.__check_inventory(calculated_ingredients, player_inventory)
+        return calculated_ingredients
+    
+    
+    def __check_inventory(self, ingredients: list[dict], player_inventory: dict[str, int]):
+        for ingredient in ingredients:
+            item_id = ingredient["item_id"]
+            required_quantity = ingredient["required_quantity"]
+            inventory_quantity = player_inventory.get(item_id, 0)
+            ingredient["inventory_quantity"] = inventory_quantity
+            ingredient["missing_quantity"] = max(required_quantity - inventory_quantity, 0)
+        return ingredients
+            
