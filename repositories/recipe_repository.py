@@ -30,3 +30,30 @@ class RecipeRepository:
             ]
         }
         
+    async def get_recipe_graph_by_item_id(self, item_id: str):
+        result = await self.__db.run(
+            """
+            MATCH (r:Recipe)-[:PRODUCES]->
+                (i:Item {id: $item_id})
+            MATCH (r)-[req:REQUIRES]->(ingredient:Item)
+            RETURN r.id AS recipe_id,
+                ingredient.id AS ingredient_id,
+                req.count AS quantity
+            """,
+            item_id=item_id
+        )
+        records = [record async for record in result]
+        if not records:
+            return None
+        return {
+            "recipe_id": records[0]["recipe_id"],
+            "ingredients": [
+                {
+                    "item_id": record["ingredient_id"],
+                    "quantity": record["quantity"],
+                }
+                for record in records
+            ]
+        }
+            
+        
