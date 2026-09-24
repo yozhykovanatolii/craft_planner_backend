@@ -6506,7 +6506,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "soup_glue",
           "Count": 1
         }
       ],
@@ -6582,7 +6582,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyPipe",
+          "ItemId": "pipe_metal",
           "Count": 2
         }
       ],
@@ -6708,7 +6708,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyFilingCabinet",
+          "ItemId": "Deployable_FilingCabinet_Medium",
           "Count": 1
         },
         {
@@ -6826,7 +6826,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "soup_glue",
           "Count": 1
         },
         {
@@ -6856,7 +6856,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyPipe",
+          "ItemId": "pipe_metal",
           "Count": 2
         }
       ],
@@ -6886,7 +6886,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyPoop",
+          "ItemId": "feces",
           "Count": 1
         },
         {
@@ -7082,7 +7082,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "soup_glue",
           "Count": 1
         },
         {
@@ -7112,7 +7112,7 @@
           "Count": 4
         },
         {
-          "ItemId": "AnyPipe",
+          "ItemId": "pipe_metal",
           "Count": 4
         },
         {
@@ -7316,7 +7316,7 @@
           "Count": 4
         },
         {
-          "ItemId": "AnyPipe",
+          "ItemId": "pipe_metal",
           "Count": 1
         },
         {
@@ -7324,7 +7324,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyOil",
+          "ItemId": "oil",
           "Count": 1
         }
       ],
@@ -7352,7 +7352,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyOil",
+          "ItemId": "oil",
           "Count": 1
         }
       ],
@@ -7644,7 +7644,7 @@
           "Count": 4
         },
         {
-          "ItemId": "AnyPipe",
+          "ItemId": "pipe_metal",
           "Count": 4
         }
       ],
@@ -8622,7 +8622,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyBarrel",
+          "ItemId": "barrel_crafted",
           "Count": 1
         },
         {
@@ -8774,7 +8774,7 @@
           "Count": 2
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "soup_glue",
           "Count": 2
         },
         {
@@ -8892,7 +8892,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "soup_glue",
           "Count": 1
         },
         {
@@ -9022,7 +9022,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 2
         }
       ],
@@ -9330,7 +9330,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyBucket",
+          "ItemId": "bucket_metal",
           "Count": 1
         },
         {
@@ -9342,7 +9342,7 @@
           "Count": 4
         },
         {
-          "ItemId": "AnyPipe",
+          "ItemId": "pipe_metal",
           "Count": 4
         }
       ],
@@ -9974,7 +9974,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 1
         },
         {
@@ -10232,7 +10232,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyBiocleanser",
+          "ItemId": "honey",
           "Count": 1
         }
       ],
@@ -10246,7 +10246,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyOil",
+          "ItemId": "oil",
           "Count": 1
         },
         {
@@ -10624,7 +10624,7 @@
           "Count": 2
         },
         {
-          "ItemId": "AnyOil",
+          "ItemId": "oil",
           "Count": 4
         }
       ],
@@ -10834,7 +10834,7 @@
           "Count": 4
         },
         {
-          "ItemId": "AnyOil",
+          "ItemId": "oil",
           "Count": 1
         },
         {
@@ -11404,7 +11404,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 10
         },
         {
@@ -11428,7 +11428,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 10
         },
         {
@@ -11452,7 +11452,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 10
         },
         {
@@ -11476,7 +11476,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 10
         },
         {
@@ -11500,7 +11500,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 10
         },
         {
@@ -11524,7 +11524,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 10
         },
         {
@@ -11548,7 +11548,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 10
         },
         {
@@ -11572,7 +11572,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 10
         },
         {
@@ -11596,7 +11596,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 10
         },
         {
@@ -11620,7 +11620,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 10
         },
         {
@@ -11644,7 +11644,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 10
         },
         {
@@ -11668,7 +11668,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 10
         },
         {
@@ -11824,7 +11824,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyTomato",
+          "ItemId": "food_tomato",
           "Count": 1
         },
         {
@@ -11848,7 +11848,7 @@
           "Count": 2
         },
         {
-          "ItemId": "AnyTomato",
+          "ItemId": "food_tomato",
           "Count": 1
         },
         {
@@ -11868,11 +11868,11 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyCookedPest",
+          "ItemId": "food_pest_body_cooked",
           "Count": 1
         },
         {
-          "ItemId": "AnyTomato",
+          "ItemId": "food_tomato",
           "Count": 1
         },
         {
@@ -11976,7 +11976,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyTomato",
+          "ItemId": "food_tomato",
           "Count": 1
         },
         {
@@ -12052,7 +12052,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyTomato",
+          "ItemId": "food_tomato",
           "Count": 1
         },
         {
@@ -12272,7 +12272,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 1
         },
         {
@@ -12294,7 +12294,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 1
         },
         {
@@ -13044,7 +13044,7 @@
       "Source": "Crafting",
       "Ingredients": [
         {
-          "ItemId": "AnyStandardRawFilet",
+          "ItemId": "filet_antefish_raw",
           "Count": 2
         },
         {
@@ -13280,7 +13280,7 @@
           "Count": 2
         },
         {
-          "ItemId": "AnyPipe",
+          "ItemId": "pipe_metal",
           "Count": 4
         },
         {
@@ -13440,7 +13440,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyPipe",
+          "ItemId": "pipe_metal",
           "Count": 2
         }
       ],
@@ -14362,7 +14362,7 @@
           "Count": 8
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 8
         },
         {
@@ -14610,7 +14610,7 @@
           "Count": 4
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 2
         }
       ],
@@ -14910,7 +14910,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 2
         },
         {
@@ -14942,7 +14942,7 @@
           "Count": 4
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 2
         }
       ],
@@ -15148,7 +15148,7 @@
           "Count": 4
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 4
         },
         {
@@ -15304,7 +15304,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 1
         }
       ],
@@ -15332,7 +15332,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 1
         }
       ],
@@ -15360,7 +15360,7 @@
           "Count": 2
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 3
         }
       ],
@@ -15664,7 +15664,7 @@
           "Count": 6
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 4
         }
       ],
@@ -15916,7 +15916,7 @@
           "Count": 8
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 4
         }
       ],
@@ -16712,7 +16712,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyPipe",
+          "ItemId": "pipe_metal",
           "Count": 8
         }
       ],
@@ -16932,7 +16932,7 @@
           "Count": 4
         },
         {
-          "ItemId": "AnyPipe",
+          "ItemId": "pipe_metal",
           "Count": 4
         }
       ],
@@ -17124,7 +17124,7 @@
           "Count": 2
         },
         {
-          "ItemId": "AnyPipe",
+          "ItemId": "pipe_metal",
           "Count": 4
         },
         {
@@ -17156,7 +17156,7 @@
           "Count": 2
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 3
         }
       ],
@@ -17404,7 +17404,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyBiocleanser",
+          "ItemId": "honey",
           "Count": 2
         }
       ],
@@ -17424,7 +17424,7 @@
           "Count": 4
         },
         {
-          "ItemId": "AnyPipe",
+          "ItemId": "pipe_metal",
           "Count": 4
         },
         {
@@ -17452,7 +17452,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 1
         },
         {
@@ -17510,7 +17510,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyPipe",
+          "ItemId": "pipe_metal",
           "Count": 4
         }
       ],
@@ -17538,7 +17538,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyPipe",
+          "ItemId": "pipe_metal",
           "Count": 4
         }
       ],
@@ -18358,7 +18358,7 @@
           "Count": 1
         },
         {
-          "ItemId": "AnyGlue",
+          "ItemId": "gigaglue",
           "Count": 1
         },
         {
