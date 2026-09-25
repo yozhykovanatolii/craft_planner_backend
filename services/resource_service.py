@@ -1,15 +1,17 @@
 from exceptions.conflict_exception import RecipeLockedException
 from exceptions.recipe_not_found_exception import RecipeNotFoundException
+from repositories.craft_plan_repository import CraftPlanRepository
 from repositories.recipe_repository import RecipeRepository
 from utils.save_file_parser import parse_player_save_file
 from collections import deque
 
 
 class ResourceService:
-    def __init__(self, recipe_repository: RecipeRepository):
+    def __init__(self, recipe_repository: RecipeRepository, craft_plan_repository: CraftPlanRepository):
         self.__recipe_repository = recipe_repository
+        self.__craft_plan_repository = craft_plan_repository    
         
-    async def create_resource_plan(self, target_name: str, target_quantity: int, file_bytes, file_path: str):
+    async def create_resource_plan(self, target_name: str, target_quantity: int, file_bytes, file_path: str, user_id: int):
         player_unlocked_recipes, player_inventory = parse_player_save_file(file_bytes, file_path)
         working_inventory = player_inventory.copy()
         recipe_records = await self.__recipe_repository.get_recipe_graph_by_item_name(target_name)
@@ -87,9 +89,8 @@ class ResourceService:
                     "PATH:",
                     new_path,
                 )
-            print("QUEUE:", list(queue))
-            
-        return ingredients_need_craft 
+            print("QUEUE:", list(queue))  
+        await self.__craft_plan_repository.create_craft_plan(user_id, target_name, ingredients_existing, ingredients_need_craft, items_need_find)
     
     
     def __check_inventory(self, ingredients: list[dict], player_inventory: dict[str, int]):
