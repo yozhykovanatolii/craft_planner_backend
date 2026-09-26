@@ -19,4 +19,8 @@ async def delete_resource_plan(plan_id: int, resource_service: ResourceServiceDe
     
 @resource_plan_router.get('', status_code = status.HTTP_200_OK)
 async def get_resource_plans(resource_service: ResourceServiceDependency, current_user: CurrentUser):
-    pass
+    return await resource_service.get_user_resource_plans(current_user.id)
+
+@resource_plan_router.get('/{plan_id}', status_code = status.HTTP_200_OK)
+async def get_resource_plans(plan_id: int, resource_service: ResourceServiceDependency, current_user: CurrentUser):
+    return await resource_service.get_user_resource_plan(current_user.id, plan_id)

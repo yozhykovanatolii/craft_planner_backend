@@ -3,6 +3,7 @@ from exceptions.conflict_exception import RecipeLockedException
 from exceptions.resource_not_found_exception import CraftPlanNotFoundException, RecipeNotFoundException
 from repositories.craft_plan_repository import CraftPlanRepository
 from repositories.recipe_repository import RecipeRepository
+from schemas.craft_plan import CraftPlanBaseSchema, CraftPlanInfoSchema
 from utils.save_file_parser import parse_player_save_file
 from collections import deque
 
@@ -103,7 +104,18 @@ class ResourceService:
         await self.__craft_plan_repository.delete_craft_plan(db_craft_plan) 
         
     async def get_user_resource_plans(self, user_id: int):
-        pass
+        db_craft_plans = await self.__craft_plan_repository.get_craft_plans_by_user_id(user_id)
+        if db_craft_plans is None:
+            raise CraftPlanNotFoundException
+        return [CraftPlanBaseSchema.model_validate(db_craft_plan) for db_craft_plan in db_craft_plans]
+    
+    async def get_user_resource_plan(self, user_id: int, plan_id: int):
+        db_craft_plan = await self.__craft_plan_repository.get_craft_plan_by_id(plan_id)
+        if db_craft_plan is None:
+            raise CraftPlanNotFoundException()
+        if db_craft_plan.user_id != user_id:
+            raise AccessDeniedException()
+        return CraftPlanInfoSchema.model_validate(db_craft_plan)
     
     def __check_inventory(self, ingredients: list[dict], player_inventory: dict[str, int]):
         for ingredient in ingredients:

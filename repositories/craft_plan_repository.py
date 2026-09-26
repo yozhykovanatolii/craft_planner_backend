@@ -1,3 +1,4 @@
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from models import CraftPlan
 
@@ -18,3 +19,8 @@ class CraftPlanRepository:
     async def delete_craft_plan(self, db_craft_plan: CraftPlan):
         await self.__db.delete(db_craft_plan)
         await self.__db.commit()
+        
+    async def get_craft_plans_by_user_id(self, user_id: int):
+        query = select(CraftPlan).where(CraftPlan.user_id == user_id)
+        result = await self.__db.execute(query)
+        return result.scalars().all()
