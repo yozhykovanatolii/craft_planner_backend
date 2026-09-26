@@ -101,6 +101,9 @@ class ResourceService:
         if db_craft_plan.user_id != user_id:
             raise AccessDeniedException()
         await self.__craft_plan_repository.delete_craft_plan(db_craft_plan) 
+        
+    async def get_user_resource_plans(self, user_id: int):
+        pass
     
     def __check_inventory(self, ingredients: list[dict], player_inventory: dict[str, int]):
         for ingredient in ingredients:

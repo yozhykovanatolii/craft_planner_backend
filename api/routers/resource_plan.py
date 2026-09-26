@@ -4,7 +4,6 @@ from api.dependencies import get_current_user, get_resource_service
 from schemas.user import UserInfoSchema
 from services.resource_service import ResourceService
 
-
 resource_plan_router = APIRouter(prefix='/resource-plans')
 ResourceServiceDependency = Annotated[ResourceService, Depends(get_resource_service)]
 CurrentUser = Annotated[UserInfoSchema, Depends(get_current_user)]
@@ -17,3 +16,7 @@ async def create_resource_plan(target_name: Annotated[str, Form(min_length=2, st
 @resource_plan_router.delete('/{plan_id}', status_code = status.HTTP_204_NO_CONTENT)
 async def delete_resource_plan(plan_id: int, resource_service: ResourceServiceDependency, current_user: CurrentUser):
     await resource_service.delete_resource_plan(plan_id, current_user.id)
+    
+@resource_plan_router.get('', status_code = status.HTTP_200_OK)
+async def get_resource_plans(resource_service: ResourceServiceDependency, current_user: CurrentUser):
+    pass
