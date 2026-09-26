@@ -1,5 +1,6 @@
+from exceptions.access_denied_exception import AccessDeniedException
 from exceptions.conflict_exception import RecipeLockedException
-from exceptions.recipe_not_found_exception import RecipeNotFoundException
+from exceptions.resource_not_found_exception import CraftPlanNotFoundException, RecipeNotFoundException
 from repositories.craft_plan_repository import CraftPlanRepository
 from repositories.recipe_repository import RecipeRepository
 from utils.save_file_parser import parse_player_save_file
@@ -91,7 +92,15 @@ class ResourceService:
                 )
             print("QUEUE:", list(queue))  
         await self.__craft_plan_repository.create_craft_plan(user_id, target_name, ingredients_existing, ingredients_need_craft, items_need_find)
-    
+        
+        
+    async def delete_resource_plan(self, plan_id: int, user_id: int):
+        db_craft_plan = await self.__craft_plan_repository.get_craft_plan_by_id(plan_id)
+        if db_craft_plan is None:
+            raise CraftPlanNotFoundException()
+        if db_craft_plan.user_id != user_id:
+            raise AccessDeniedException()
+        await self.__craft_plan_repository.delete_craft_plan(db_craft_plan) 
     
     def __check_inventory(self, ingredients: list[dict], player_inventory: dict[str, int]):
         for ingredient in ingredients:

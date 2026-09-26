@@ -1,10 +1,11 @@
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from exceptions.access_denied_exception import AccessDeniedException
 from exceptions.authentication_exception import AuthenticationException
 from exceptions.conflict_exception import ConflictException
 from exceptions.media_type_exception import MediaTypeException
-from exceptions.recipe_not_found_exception import RecipeNotFoundException
+from exceptions.resource_not_found_exception import ResourceNotFoundException
 
 def register_error_handlers(app: FastAPI):
     @app.exception_handler(AuthenticationException)
@@ -37,8 +38,18 @@ def register_error_handlers(app: FastAPI):
             }
         )
         
-    @app.exception_handler(RecipeNotFoundException)
-    def recipe_not_exception_handler(_: Request, exception: RecipeNotFoundException):
+    @app.exception_handler(AccessDeniedException)
+    def media_type_exception_handler(_: Request, exception: AccessDeniedException):
+        return JSONResponse(
+            status_code=status.HTTP_403_FORBIDDEN,
+            content={
+                'error_code': exception.error_code,
+                'message': exception.message,
+            }
+        )
+        
+    @app.exception_handler(ResourceNotFoundException)
+    def recipe_not_exception_handler(_: Request, exception: ResourceNotFoundException):
         return JSONResponse(
             status_code=status.HTTP_404_NOT_FOUND,
             content={

@@ -11,3 +11,10 @@ class CraftPlanRepository:
         await self.__db.commit()
         await self.__db.refresh(db_craft_plan)
         return db_craft_plan
+    
+    async def get_craft_plan_by_id(self, craft_plan_id: int):
+        return await self.__db.get(CraftPlan, craft_plan_id)
+    
+    async def delete_craft_plan(self, db_craft_plan: CraftPlan):
+        await self.__db.delete(db_craft_plan)
+        await self.__db.commit()
