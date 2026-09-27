@@ -24,3 +24,8 @@ async def get_resource_plans(resource_service: ResourceServiceDependency, curren
 @resource_plan_router.get('/{plan_id}', status_code = status.HTTP_200_OK)
 async def get_resource_plans(plan_id: int, resource_service: ResourceServiceDependency, current_user: CurrentUser):
     return await resource_service.get_user_resource_plan(current_user.id, plan_id)
+
+@resource_plan_router.get('/{plan_id}/recalculate', status_code = status.HTTP_200_OK)
+async def get_resource_plans(plan_id: int, player_file: Annotated[UploadFile, File()], resource_service: ResourceServiceDependency, current_user: CurrentUser):
+    file_bytes = await player_file.read()
+    await resource_service.recalculate_resource_plan(current_user.id, plan_id, file_bytes, player_file.filename)

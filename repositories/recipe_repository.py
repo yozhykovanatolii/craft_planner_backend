@@ -11,6 +11,7 @@ class RecipeRepository:
                 (i:Item {display_name: $display_name})
             MATCH (r)-[req:REQUIRES]->(ingredient:Item)
             RETURN r.id AS recipe_id,
+                i.id AS item_id,
                 ingredient.id AS ingredient_id,
                 ingredient.display_name AS ingredient_display_name,
                 req.count AS quantity
@@ -22,6 +23,7 @@ class RecipeRepository:
             return None
         return {
             "recipe_id": records[0]["recipe_id"],
+            "item_id": records[0]["item_id"],
             "ingredients": [
                 {
                     "item_id": record["ingredient_id"],

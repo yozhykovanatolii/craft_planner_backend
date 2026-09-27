@@ -117,6 +117,20 @@ class ResourceService:
             raise AccessDeniedException()
         return CraftPlanInfoSchema.model_validate(db_craft_plan)
     
+    async def recalculate_resource_plan(self, user_id: int, plan_id: int, file_bytes, file_path: str):
+        player_inventory = parse_player_save_file(file_bytes, file_path)[1]
+        db_craft_plan = await self.__craft_plan_repository.get_craft_plan_by_id(plan_id)
+        if db_craft_plan is None:
+            raise CraftPlanNotFoundException()
+        if db_craft_plan.user_id != user_id:
+            raise AccessDeniedException()
+        recipe_records = await self.__recipe_repository.get_recipe_graph_by_item_name(db_craft_plan.target_item_name)
+        if not recipe_records:
+            raise RecipeNotFoundException()
+        target_item_id = recipe_records['item_id']
+        remaining_quantity = 5 - player_inventory.get(target_item_id, 0)
+        
+
     def __check_inventory(self, ingredients: list[dict], player_inventory: dict[str, int]):
         for ingredient in ingredients:
             item_id = ingredient["item_id"]
