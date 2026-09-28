@@ -21,7 +21,9 @@ class CraftPlan(Base):
     
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     target_item_name = Column(String, nullable=False)
+    target_item_quantity = Column(Integer, nullable=False)
     available_ingredients = Column(JSONB, nullable=False)
     ingredients_to_craft = Column(JSONB, nullable=False)
     required_components = Column(JSONB, nullable=False)
+    status = Column(String, default = 'Active')
     created_at = Column(DateTime, default = datetime.now)

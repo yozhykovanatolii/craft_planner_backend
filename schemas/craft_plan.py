@@ -6,6 +6,8 @@ class CraftPlanBaseSchema(BaseModel):
     
     id: int
     target_item_name: str
+    target_item_quantity: int
+    status: str
     created_at: datetime
     
 class CraftPlanInfoSchema(CraftPlanBaseSchema):

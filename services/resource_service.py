@@ -92,7 +92,7 @@ class ResourceService:
                     new_path,
                 )
             print("QUEUE:", list(queue))  
-        await self.__craft_plan_repository.create_craft_plan(user_id, target_name, ingredients_existing, ingredients_need_craft, items_need_find)
+        await self.__craft_plan_repository.create_craft_plan(user_id, target_name, target_quantity, ingredients_existing, ingredients_need_craft, items_need_find)
         
         
     async def delete_resource_plan(self, plan_id: int, user_id: int):
@@ -128,7 +128,11 @@ class ResourceService:
         if not recipe_records:
             raise RecipeNotFoundException()
         target_item_id = recipe_records['item_id']
-        remaining_quantity = 5 - player_inventory.get(target_item_id, 0)
+        remaining_quantity = db_craft_plan.target_item_quantity - player_inventory.get(target_item_id, 0)
+        if remaining_quantity <= 0:
+            db_craft_plan.status = 'Completed'
+            await self.__craft_plan_repository.update_craft_plan(db_craft_plan)
+            return
         
 
     def __check_inventory(self, ingredients: list[dict], player_inventory: dict[str, int]):
