@@ -10,6 +10,7 @@ from repositories.user_repository import UserRepository
 from sqlalchemy.ext.asyncio import AsyncSession
 from services.auth_service import AuthService
 from services.craft_plan_service import CraftPlanService
+from services.resource_service import ResourceService
 from services.user_service import UserService
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth/login')
@@ -34,6 +35,9 @@ def get_user_service(user_Repository: UserRepositoryDependency, supabase_storage
 
 def get_craft_plan_service(recipe_repository: RecipeRepositoryDependency, craft_plan_repository: CraftPlanRepositoryDependency):
     return CraftPlanService(recipe_repository, craft_plan_repository)
+
+def get_resource_service(recipe_repository: RecipeRepositoryDependency):
+    return ResourceService(recipe_repository)
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)], user_Service: Annotated[UserService, Depends(get_user_service)]):
     return await user_Service.get_user(token)

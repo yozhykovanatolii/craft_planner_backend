@@ -33,5 +33,28 @@ class RecipeRepository:
                 for record in records
             ]
         }
+        
+    async def get_items_using_resource(self, resource_name: str):
+        result = await self.__db.run(
+            """
+            MATCH (r:Recipe)-[:REQUIRES]->
+                (resource:Item {display_name: $display_name})
+            MATCH (r)-[:PRODUCES]->(item:Item)
+            RETURN DISTINCT
+                    item.id AS item_id,
+                    item.display_name AS item_display_name
+            """,
+            display_name=resource_name
+        )
+        records = [record async for record in result]
+        if not records:
+            return None
+        return [
+                {
+                    "item_id": record["item_id"],
+                    "display_name": record["item_display_name"],
+                }
+                for record in records
+        ]
             
         
