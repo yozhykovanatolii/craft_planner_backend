@@ -1,6 +1,6 @@
 from exceptions.resource_not_found_exception import ItemNotFoundException
 from repositories.recipe_repository import RecipeRepository
-from schemas.resource import ResourceUsageResponse
+from schemas.resource import ResourceUsageItem, ResourceUsagePathResponse, ResourceUsageResponse
 
 
 class ResourceService:
@@ -15,3 +15,17 @@ class ResourceService:
             resource_name=resource_name,
             used_in=items,
         )
+        
+    async def get_resource_usage_path(self, resource_name: str, target_name: str):
+        item_ids = await self.__recipe_repository.get_item_ids_by_names(resource_name, target_name)
+        if item_ids is None:
+            raise ItemNotFoundException()
+        start_id = item_ids['start_id']
+        target_id = item_ids['target_id']
+        if start_id == target_id:
+            return ResourceUsagePathResponse(
+                resource_name=resource_name,
+                target_name=target_name,
+                path=[ResourceUsageItem(item_id=start_id, display_name=resource_name)]
+            )
+        return []

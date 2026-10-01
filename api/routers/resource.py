@@ -10,3 +10,7 @@ ResourceServiceDependency = Annotated[ResourceService, Depends(get_resource_serv
 @resource_router.get("/{resource_name}/usage", response_model=ResourceUsageResponse)
 async def get_resource_usage(resource_name: str, resource_service: ResourceServiceDependency):
     return await resource_service.get_resource_usage(resource_name)
+
+@resource_router.get("/{resource_name}/usage/{target_name}/path")
+async def get_resource_usage_path(resource_name: str, target_name: str, resource_service: ResourceServiceDependency):
+    return await resource_service.get_resource_usage_path(resource_name, target_name)

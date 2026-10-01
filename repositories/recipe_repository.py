@@ -56,5 +56,23 @@ class RecipeRepository:
                 }
                 for record in records
         ]
+        
+    async def get_item_ids_by_names(self, resource_name: str, target_name: str):
+        result = await self.__db.run(
+            """
+            MATCH (start:Item {display_name: $resource_name})
+            MATCH (target:Item {display_name: $target_name}) 
+            RETURN start.id as start_id, target.id as target_id
+            """,
+            resource_name=resource_name,
+            target_name=target_name
+        )
+        record = await result.single()
+        if record is None:
+            return None
+        return {
+            "start_id": record["start_id"],
+            "target_id": record["target_id"]
+        }
             
         
