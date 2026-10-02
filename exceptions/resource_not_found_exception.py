@@ -25,3 +25,10 @@ class ItemNotFoundException(ResourceNotFoundException):
             message="Item was not found",
             error_code="item_not_found",
         )
+        
+class ResourceUsagePathNotFoundException(ResourceNotFoundException):
+    def __init__(self, resource_name: str, target_name: str):
+        super().__init__(
+            message=f"No usage path found from '{resource_name}' to '{target_name}'",
+            error_code="resource_usage_path_not_found",
+        )

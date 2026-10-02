@@ -74,5 +74,26 @@ class RecipeRepository:
             "start_id": record["start_id"],
             "target_id": record["target_id"]
         }
+        
+    async def get_next_items(self, item_id: str):
+        result = await self.__db.run(
+            """
+            MATCH (r:Recipe)-[:REQUIRES]->
+                (resource:Item {id: $item_id})
+            MATCH (r)-[:PRODUCES]->(item:Item)
+            RETURN DISTINCT
+                    item.id AS item_id,
+                    item.display_name AS item_display_name
+            """,
+            item_id=item_id
+        )
+        records = [record async for record in result]
+        return [
+                {
+                    "item_id": record["item_id"],
+                    "display_name": record["item_display_name"],
+                }
+                for record in records
+        ]
             
         
