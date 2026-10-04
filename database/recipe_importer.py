@@ -45,7 +45,6 @@ async def import_recipes(file_path: str):
             MERGE (item:Item {id: recipe.creates_item_id})
 
             MERGE (r)-[p:PRODUCES]->(item)
-            SET p.count = recipe.produces_count
             """,
             recipes=recipes,
         )
