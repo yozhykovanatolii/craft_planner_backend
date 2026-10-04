@@ -16,7 +16,7 @@ class CraftPlanService:
     async def create_craft_plan(self, target_name: str, target_quantity: int, file_bytes, file_path: str, user_id: int):
         player_unlocked_recipes, player_inventory = parse_player_save_file(file_bytes, file_path)
         working_inventory = player_inventory.copy()
-        recipe_records = await self.__recipe_repository.get_recipe_graph_by_item_name(target_name)
+        recipe_records = await self.__recipe_repository.get_recipe_ingredients_by_item_name(target_name)
         if not recipe_records:
             raise RecipeNotFoundException()
         recipe_id = recipe_records['recipe_id']
@@ -56,7 +56,7 @@ class CraftPlanService:
             item_display_name = current["item_display_name"]
             missing_quantity = current["missing_quantity"]
             path = current["path"]
-            recipe_records = await self.__recipe_repository.get_recipe_graph_by_item_name(item_display_name)
+            recipe_records = await self.__recipe_repository.get_recipe_ingredients_by_item_name(item_display_name)
             if not recipe_records:
                 items_need_find[item_display_name] = items_need_find.get(item_display_name, 0) + missing_quantity
                 continue
@@ -106,7 +106,7 @@ class CraftPlanService:
             raise CraftPlanNotFoundException()
         if db_craft_plan.user_id != user_id:
             raise AccessDeniedException()
-        recipe_records = await self.__recipe_repository.get_recipe_graph_by_item_name(db_craft_plan.target_item_name)
+        recipe_records = await self.__recipe_repository.get_recipe_ingredients_by_item_name(db_craft_plan.target_item_name)
         if not recipe_records:
             raise RecipeNotFoundException()
         target_item_id = recipe_records['item_id']

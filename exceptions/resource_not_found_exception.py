@@ -26,6 +26,13 @@ class ItemNotFoundException(ResourceNotFoundException):
             error_code="item_not_found",
         )
         
+class ItemsNotFoundException(ResourceNotFoundException):
+    def __init__(self, error_text):
+        super().__init__(
+            message=error_text,
+            error_code="items_not_found",
+        )
+        
 class ResourceUsagePathNotFoundException(ResourceNotFoundException):
     def __init__(self, resource_name: str, target_name: str):
         super().__init__(
