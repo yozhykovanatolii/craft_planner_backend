@@ -19,6 +19,13 @@ class CraftPlanNotFoundException(ResourceNotFoundException):
             error_code="craft_plan_not_found",
         )
         
+class CraftPlansNotFoundException(ResourceNotFoundException):
+    def __init__(self):
+        super().__init__(
+            message="Craft plans were not found",
+            error_code="craft_plans_not_found",
+        )
+        
 class ItemNotFoundException(ResourceNotFoundException):
     def __init__(self):
         super().__init__(
