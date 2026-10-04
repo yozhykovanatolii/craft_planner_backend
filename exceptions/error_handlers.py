@@ -6,8 +6,19 @@ from exceptions.authentication_exception import AuthenticationException
 from exceptions.conflict_exception import ConflictException
 from exceptions.media_type_exception import MediaTypeException
 from exceptions.resource_not_found_exception import ResourceNotFoundException
+from exceptions.save_file_parse_exception import SaveFileParseException
 
 def register_error_handlers(app: FastAPI):
+    @app.exception_handler(SaveFileParseException)
+    def save_file_parse_exception_handler(_: Request, exception: SaveFileParseException):
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={
+                'error_code': exception.error_code,
+                'message': exception.message,
+            }
+        )
+    
     @app.exception_handler(AuthenticationException)
     def authentication_exception_handler(_: Request, exception: AuthenticationException):
         return JSONResponse(

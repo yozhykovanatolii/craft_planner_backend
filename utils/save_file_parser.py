@@ -1,6 +1,11 @@
 import json
 from typing import BinaryIO
 
+from exceptions.save_file_parse_exception import (
+    InvalidFileExtensionException,
+    InvalidJsonException,
+    InvalidSaveStructureException,
+)
 
 def parse_player_save_file(
     file: BinaryIO,
@@ -13,8 +18,9 @@ def parse_player_save_file(
     properties = data.get("Properties")
 
     if not isinstance(properties, list):
-        raise ValueError(
-            "Invalid save structure: Properties not found"
+        raise InvalidSaveStructureException(
+            message="Properties not found in save file",
+            error_code="properties_not_found",
         )
 
     unlocked_recipes = _get_unlocked_recipes(properties)
@@ -27,13 +33,13 @@ def _load_json(file: BinaryIO) -> dict:
     try:
         data = json.loads(file)
     except json.JSONDecodeError as e:
-        raise ValueError("Invalid JSON file") from e
+        raise InvalidJsonException() from e
     return data
 
 
 def _validate_extension(filename: str) -> None:
     if not filename.endswith(".sav.json"):
-        raise ValueError("Invalid file extension")
+        raise InvalidFileExtensionException()
 
 
 def _find_property_by_prefix(
@@ -80,8 +86,9 @@ def _get_unlocked_recipes(
         "RecipesUnlock_",
     )
     if recipes_property is None:
-        raise ValueError(
-            "RecipesUnlock property not found"
+        raise InvalidSaveStructureException(
+            message="RecipesUnlock property not found",
+            error_code="recipes_unlock_not_found",
         )
     value = recipes_property.get("Value")
     recipes = value.get("Items")
@@ -95,7 +102,10 @@ def _get_inventory(properties: list) -> list[dict]:
     )
 
     if inventory_property is None:
-        raise ValueError("Inventory property not found")
+        raise InvalidSaveStructureException(
+            message="Inventory property not found",
+            error_code="inventory_not_found",
+        )
 
     items = inventory_property["Value"]["Items"]
 
@@ -125,22 +135,25 @@ def _get_item_name(
     )
 
     if item_data_table is None:
-        raise ValueError(
-            "ItemDataTable property not found"
+        raise InvalidSaveStructureException(
+            message="ItemDataTable property not found",
+            error_code="item_data_table_not_found",
         )
 
     value = item_data_table.get("Value")
 
     if not isinstance(value, dict):
-        raise ValueError(
-            "Invalid ItemDataTable property"
+        raise InvalidSaveStructureException(
+            message="Invalid ItemDataTable property",
+            error_code="invalid_item_data_table",
         )
 
     values = value.get("Value")
 
     if not isinstance(values, list):
-        raise ValueError(
-            "Invalid ItemDataTable value"
+        raise InvalidSaveStructureException(
+            message="Invalid ItemDataTable value",
+            error_code="invalid_item_data_table_value",
         )
 
     row_name = next(
@@ -156,15 +169,17 @@ def _get_item_name(
     )
 
     if row_name is None:
-        raise ValueError(
-            "RowName property not found"
+        raise InvalidSaveStructureException(
+            message="RowName property not found",
+            error_code="row_name_not_found",
         )
 
     name = row_name.get("Value")
 
     if not isinstance(name, str):
-        raise ValueError(
-            "Invalid item name"
+        raise InvalidSaveStructureException(
+            message="Invalid item name",
+            error_code="invalid_item_name",
         )
 
     return name
@@ -179,8 +194,9 @@ def _get_item_quantity(
         "ChangeableData_",
     )
     if changeable_data is None:
-        raise ValueError(
-            "ChangeableData property not found"
+        raise InvalidSaveStructureException(
+            message="ChangeableData property not found",
+            error_code="changeable_data_not_found",
         )
     value = changeable_data.get("Value")
     values = value.get("Value")
