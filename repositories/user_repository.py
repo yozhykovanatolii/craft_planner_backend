@@ -8,7 +8,7 @@ class UserRepository:
         self.__db = db
         
     async def create_user(self, userRegister: UserRegisterSchema):
-        db_user = User(full_name = userRegister.full_name, phone_number = userRegister.phone_number, email = userRegister.email, password = userRegister.password, avatar_url = 'https://fojohxjzxvieoakjyzwz.supabase.co/storage/v1/object/public/images/users/default_avatar.jpg')
+        db_user = User(full_name = userRegister.full_name, phone_number = userRegister.phone_number, email = userRegister.email, password = userRegister.password)
         self.__db.add(db_user)
         await self.__db.commit()
         await self.__db.refresh(db_user)

@@ -13,7 +13,7 @@ class User(Base):
     password = Column(String, nullable=False)
     full_name = Column(String, nullable=False)
     phone_number = Column(String, nullable=False)
-    avatar_url = Column(String, nullable=False)
+    avatar_url = Column(String, nullable=False, default = 'https://fojohxjzxvieoakjyzwz.supabase.co/storage/v1/object/public/images/users/default_avatar.jpg')
     
     
 class CraftPlan(Base):
