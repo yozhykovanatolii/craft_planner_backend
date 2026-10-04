@@ -1,15 +1,15 @@
 from pydantic import BaseModel
 
-class ResourceUsageItem(BaseModel):
+class ResourceUsageItemSchema(BaseModel):
     item_id: str
     display_name: str
 
 
-class ResourceUsageResponse(BaseModel):
+class ResourceUsageSchema(BaseModel):
     resource_name: str
-    used_in: list[ResourceUsageItem]
+    used_in: list[ResourceUsageItemSchema]
     
-class ResourceUsagePathResponse(BaseModel):
+class ResourceUsagePathSchema(BaseModel):
     resource_name: str
     target_name: str
-    path: list[ResourceUsageItem]
+    path: list[ResourceUsageItemSchema]

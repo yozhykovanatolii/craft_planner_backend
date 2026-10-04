@@ -1,6 +1,6 @@
 from exceptions.resource_not_found_exception import ItemNotFoundException, ResourceUsagePathNotFoundException
 from repositories.recipe_repository import RecipeRepository
-from schemas.resource import ResourceUsageItem, ResourceUsagePathResponse, ResourceUsageResponse
+from schemas.resource import ResourceUsageItemSchema, ResourceUsagePathSchema, ResourceUsageSchema
 from collections import deque
 
 
@@ -12,7 +12,7 @@ class ResourceService:
         items = await self.__recipe_repository.get_items_using_resource(resource_name)
         if items is None:
             raise ItemNotFoundException()
-        return ResourceUsageResponse(
+        return ResourceUsageSchema(
             resource_name=resource_name,
             used_in=items,
         )
@@ -24,10 +24,10 @@ class ResourceService:
         start_id = item_ids['start_id']
         target_id = item_ids['target_id']
         if start_id == target_id:
-            return ResourceUsagePathResponse(
+            return ResourceUsagePathSchema(
                 resource_name=resource_name,
                 target_name=target_name,
-                path=[ResourceUsageItem(item_id=start_id, display_name=resource_name)]
+                path=[ResourceUsageItemSchema(item_id=start_id, display_name=resource_name)]
             )
         queue = deque([start_id])
         visited = {start_id}
@@ -56,7 +56,7 @@ class ResourceService:
         if target_id not in visited:
             raise ResourceUsagePathNotFoundException(resource_name, target_name)
         path = self.__backtrace(parent, items_by_id, start_id, target_id)
-        return ResourceUsagePathResponse(
+        return ResourceUsagePathSchema(
             resource_name=resource_name,
             target_name=target_name,
             path=path,
