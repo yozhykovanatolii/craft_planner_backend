@@ -50,38 +50,23 @@ class CraftPlanService:
                     ingredient["item_display_name"],
                 ],
             })
-        print(queue)
         while queue:
             current = queue.popleft()
             print(current)
             item_display_name = current["item_display_name"]
             missing_quantity = current["missing_quantity"]
             path = current["path"]
-            print("\nCURRENT:", item_display_name, missing_quantity)
-            print("PATH:", path)
             recipe_records = await self.__recipe_repository.get_recipe_graph_by_item_name(item_display_name)
-            print("RECIPE:", recipe_records)
             if not recipe_records:
-                print(f"SKIP / NO RECIPE: {item_display_name}")
-                print(
-                    "ADD TO TOTALS:",
-                    item_display_name,
-                    missing_quantity,
-                    "PATH:",
-                    path,
-                )
                 items_need_find[item_display_name] = items_need_find.get(item_display_name, 0) + missing_quantity
-                print("TOTALS:", items_need_find)
                 continue
             recipe_ingredients = recipe_records['ingredients']
             missing_calculated_ingredients = self.__get_calculated_ingredients(recipe_ingredients, missing_quantity)
             missing_calculated_ingredients = self.__check_inventory(missing_calculated_ingredients, working_inventory)
             missing_sub_ingredients = self.__get_missing_ingredients(missing_calculated_ingredients)
-            print("NEW MISSING:", missing_sub_ingredients)
             for ingredient in missing_sub_ingredients:
                 ingredient_display_name = ingredient["item_display_name"]
                 if ingredient_display_name in path:
-                    print("CYCLE:", path + [ingredient_display_name])
                     continue
                 new_path = path + [ingredient_display_name]
                 queue.append({
@@ -89,13 +74,6 @@ class CraftPlanService:
                     "missing_quantity": ingredient["missing_quantity"],
                     "path": new_path,
                 })
-                print(
-                    "ADDED:",
-                    ingredient_display_name,
-                    "PATH:",
-                    new_path,
-                )
-            print("QUEUE:", list(queue))
         return items_need_find
         
     async def delete_craft_plan(self, plan_id: int, user_id: int):
