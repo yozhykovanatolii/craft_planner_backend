@@ -114,6 +114,32 @@ docker compose up --build
 ```
 The API and API documentation will be available at: http://localhost:8000 and http://localhost:8000/docs
 
+## 🏗️ Project Structure
+
+```text
+├── api/
+│   ├── routers/              # API route definitions
+│   ├── dependencies.py       # FastAPI dependencies
+│   └── router.py             # Main API router
+├── clients/                  # External service clients
+├── database/                 # Database configuration
+├── exceptions/               # Custom exceptions and error handlers
+├── repositories/             # Data access layer
+├── schemas/                  # Pydantic schemas
+├── scripts/                  # Utility and data processing scripts
+├── services/                 # Business logic
+├── utils/                    # Utility functions
+├── .env.example              # Environment variables template
+├── config.py                 # Application configuration
+├── docker-compose.yaml       # Docker Compose configuration
+├── Dockerfile                # Backend Docker image
+├── main.py                   # FastAPI application entry point
+├── models.py                 # SQLAlchemy models
+├── recipes.json              # Game recipes data
+├── requirements.txt          # Python dependencies
+└── security.py               # Authentication and security
+```
+
 ## 📡 API Endpoints
 
 The API provides endpoints for:
