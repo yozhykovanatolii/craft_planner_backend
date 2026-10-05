@@ -103,7 +103,7 @@ OPENROUTE_API_KEY=
 POSTGRES_PASSWORD=postgres
 POSTGRES_HOST=postgres
 POSTGRES_PORT=5432
-POSTGRES_DB=smart_courier_assistant
+POSTGRES_DB=craft_planner
 POSTGRES_USER=postgres
 
 #Neo4j
