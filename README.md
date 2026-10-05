@@ -52,4 +52,72 @@ Instead of manually calculating nested crafting dependencies, the application an
 **External Services**
 - **Supabase Storage** – File storage for user uploads and media management
 
+## 🚀 Getting Started
+
+### Prerequisites
+- Python 3.x
+- Docker
+
+### Installation
+1. Clone the repository
+```
+git clone https://github.com/yozhykovanatolii/smart_courier_assistant_backend.git
+```
+
+2. Convert the player save file to JSON
+
+Craft Planner requires the player's save file in JSON format to extract inventory and unlocked recipes.
+
+Download **UeSaveConverter** from its [GitHub repository](https://github.com/CrystalFerrai/UeSaveConverter) and use it to convert the `.sav` file to `.json`. The tool requires .NET Runtime 8.0 x64.
+
+```bash
+UeSaveConverter --to-json --overwrite path\to\savefile.sav
+```
+
+3. Configure environment variables
+
+This project uses external services to provide Supabase Storage as file storage.
+
+To configure this service, it needs to create a project in Supabase at https://supabase.com and get your project credentials(URL and anon key)
+
+For creating SECRET_KEY and using for access and refresh tokens, you have to execute this code:
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+Use .env.example for creating the .env file in the project root and set the following values:
+
+```env
+# Security
+SECRET_KEY=
+
+# Supabase
+SUPABASE_PROJECT_URL=
+SUPABASE_ANON_KEY=
+
+# External APIs
+OPENAI_API_KEY=
+OPENROUTE_API_KEY=
+
+# PostgreSQL
+POSTGRES_PASSWORD=postgres
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=smart_courier_assistant
+POSTGRES_USER=postgres
+
+#Neo4j
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USERNAME=neo4j
+NEO4J_PASSWORD=password123
+```
+
+3. Run the application
+```
+docker compose up --build
+```
+The API and API documentation will be available at: http://localhost:8000 and http://localhost:8000/docs
+
+
+
 
