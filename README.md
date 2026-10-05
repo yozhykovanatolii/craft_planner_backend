@@ -114,6 +114,18 @@ docker compose up --build
 ```
 The API and API documentation will be available at: http://localhost:8000 and http://localhost:8000/docs
 
+## 📡 API Endpoints
+
+The API provides endpoints for:
+
+* Authentication and user management
+* Crafting plans
+* Resource usage
+* Resource usage paths
+* Plan recalculation
+
+For the complete API reference, see the interactive [Swagger UI](http://localhost:8000/docs).
+
 
 
 
