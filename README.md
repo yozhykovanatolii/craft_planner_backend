@@ -25,4 +25,31 @@ Instead of manually calculating nested crafting dependencies, the application an
 * 🗄️ **Database** – PostgreSQL for persistent application data and Neo4j for crafting dependencies
 * 🔒 **Security** – Password hashing and JWT-based access and refresh tokens
 
+## 🛠 Tech Stack
+
+**Core Framework**
+- **FastAPI** – Web framework for building the REST API 
+- **Python** – Programming language    
+
+**Database**
+- **PostgreSQL** – Relational database
+- **Neo4j** – Graph database for crafting recipes and item dependencies
+- **SQLAlchemy** – ORM and database interaction
+- **asyncpg** – Asynchronous PostgreSQL driver
+
+**Validation & Configuration**
+- **Pydantic** – Data validation and serialization
+- **Pydantic Settings** – Environment-based configuration
+
+**Authentication & Security**
+- **JWT** – Access and refresh token authentication
+- **pwdlib** – Password hashing
+
+**Infrastructure**
+- **Docker** – Containerization
+- **Docker Compose** – Multi-container application setup
+
+**External Services**
+- **Supabase Storage** – File storage for user uploads and media management
+
 
