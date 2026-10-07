@@ -33,5 +33,26 @@ class RecipeRepository:
                 for record in records
             ]
         }
+        
+    async def get_dependency_edges_by_item_ids(self, items_ids: list[str]):
+        result = await self.__db.run(
+            """
+            MATCH (start:Item)
+            WHERE start.id IN $items_ids
+            MATCH p =
+                (start)
+                ((parent:Item)<-[:PRODUCES]-(recipe:Recipe)-[req:REQUIRES]->(ingredient:Item))+
+            UNWIND range(0, size(req) - 1) AS index
+            RETURN
+                parent[index].id AS parent_item_id,
+                parent[index].display_name AS parent_display_name,
+                ingredient[index].id AS ingredient_id,
+                ingredient[index].display_name AS ingredient_display_name,
+                req[index].count AS quantity
+            """,
+            items_ids=items_ids
+        )
+        records = [record async for record in result]
+        return records
             
         

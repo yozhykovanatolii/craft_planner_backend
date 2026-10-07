@@ -28,7 +28,7 @@ class CraftPlanService:
         if remaining_quantity <= 0:
             await self.__craft_plan_repository.create_craft_plan(user_id, target_name, target_quantity)
             return
-        calculated_ingredients = self.__get_calculated_ingredients(recipe_ingredients, target_quantity)
+        calculated_ingredients = self.__get_calculated_ingredients(recipe_ingredients, remaining_quantity)
         calculated_ingredients = self.__check_inventory(calculated_ingredients, working_inventory)
         missing_ingredients = self.__get_missing_ingredients(calculated_ingredients)
         ingredients_existing = {
@@ -40,46 +40,67 @@ class CraftPlanService:
             ingredient["item_display_name"]: ingredient["missing_quantity"]
             for ingredient in missing_ingredients
         }
-        items_need_find = await self.__resolve_crafting_dependencies(missing_ingredients, target_name, working_inventory)
+        items_need_find = await self.__resolve_crafting_dependencies(missing_ingredients, target_item_id, working_inventory)
         await self.__craft_plan_repository.create_craft_plan(user_id, target_name, target_quantity, ingredients_existing, ingredients_need_craft, items_need_find)
         
-    async def __resolve_crafting_dependencies(self, missing_ingredients, target_item_name, working_inventory):
+    async def __resolve_crafting_dependencies(self, missing_ingredients, target_item_id, working_inventory):
         items_need_find = {}
+        items_ids = [
+            ingredient["item_id"]
+            for ingredient in missing_ingredients
+        ]
+        recipe_records = await self.__recipe_repository.get_dependency_edges_by_item_ids(items_ids)
+        dependency_graph = self.__build_dependency_graph(recipe_records)
         queue = deque()
         for ingredient in missing_ingredients:
             queue.append({
+                "item_id": ingredient["item_id"],
                 "item_display_name": ingredient["item_display_name"],
                 "missing_quantity": ingredient["missing_quantity"],
                 "path": [
-                    target_item_name,
-                    ingredient["item_display_name"],
+                    target_item_id,
+                    ingredient["item_id"],
                 ],
             })
         while queue:
             current = queue.popleft()
-            print(current)
+            item_id = current["item_id"]
             item_display_name = current["item_display_name"]
             missing_quantity = current["missing_quantity"]
             path = current["path"]
-            recipe_records = await self.__recipe_repository.get_recipe_ingredients_by_item_name(item_display_name)
-            if not recipe_records:
+            recipe_ingredients = dependency_graph.get(item_id)
+            if recipe_ingredients is None:
                 items_need_find[item_display_name] = items_need_find.get(item_display_name, 0) + missing_quantity
                 continue
-            recipe_ingredients = recipe_records['ingredients']
             missing_calculated_ingredients = self.__get_calculated_ingredients(recipe_ingredients, missing_quantity)
             missing_calculated_ingredients = self.__check_inventory(missing_calculated_ingredients, working_inventory)
             missing_sub_ingredients = self.__get_missing_ingredients(missing_calculated_ingredients)
             for ingredient in missing_sub_ingredients:
+                ingredient_id = ingredient["item_id"]
                 ingredient_display_name = ingredient["item_display_name"]
-                if ingredient_display_name in path:
+                if ingredient_id in path:
                     continue
-                new_path = path + [ingredient_display_name]
                 queue.append({
+                    "item_id": ingredient_id,
                     "item_display_name": ingredient_display_name,
                     "missing_quantity": ingredient["missing_quantity"],
-                    "path": new_path,
+                    "path": path + [ingredient_id],
                 })
         return items_need_find
+    
+    def __build_dependency_graph(self, records):
+        dependency_graph = {}
+        for record in records:
+            parent_item_id = record["parent_item_id"]
+
+            dependency_graph.setdefault(parent_item_id, []).append(
+                {
+                    "item_id": record["ingredient_id"],
+                    "item_display_name": record["ingredient_display_name"],
+                    "quantity": record["quantity"],
+                }
+            )
+        return dependency_graph
         
     async def delete_craft_plan(self, plan_id: int, user_id: int):
         db_craft_plan = await self.__craft_plan_repository.get_craft_plan_by_id(plan_id)
@@ -133,7 +154,7 @@ class CraftPlanService:
             ingredient["item_display_name"]: ingredient["missing_quantity"]
             for ingredient in missing_ingredients
         }
-        items_need_find = await self.__resolve_crafting_dependencies(missing_ingredients, db_craft_plan.target_item_name, working_inventory)
+        items_need_find = await self.__resolve_crafting_dependencies(missing_ingredients, target_item_id, working_inventory)
         db_craft_plan.available_ingredients = ingredients_existing
         db_craft_plan.ingredients_to_craft = ingredients_need_craft
         db_craft_plan.required_components = items_need_find

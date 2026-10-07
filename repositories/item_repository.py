@@ -65,3 +65,27 @@ class ItemRepository:
                 }
                 for record in records
         ]
+        
+    async def get_shortest_path_between_items(self, resource_item_id: str, target_item_id: str):
+        result = await self.__db.run(
+            """
+            MATCH p = SHORTEST 1
+                    (start:Item {id: $start_id})
+                    (
+                        (previous:Item)<-[:REQUIRES]-(:Recipe)-[:PRODUCES]->(next:Item)
+                    )+
+                    (target:Item {id: $target_id})
+            RETURN [
+                node IN nodes(p)
+                WHERE node:Item
+                | {
+                    item_id: node.id,
+                    display_name: node.display_name
+                }
+            ] AS path
+            """,
+            start_id=resource_item_id,
+            target_id=target_item_id
+        )
+        record = await result.single()
+        return record["path"]
