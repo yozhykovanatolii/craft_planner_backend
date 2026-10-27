@@ -10,6 +10,8 @@ services:
           condition: service_healthy
         neo4j:
           condition: service_healthy
+        redis:
+          condition: service_healthy   
   
   postgres:
     image: postgres:18
@@ -37,6 +39,29 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+  
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  taskiq_worker:
+    build: .
+    env_file:
+      - .env
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: taskiq worker taskiq_app:broker
+    depends_on:
+        redis:
+          condition: service_healthy
 volumes:
   postgres_data:
   neo4j_data:
+  redis_data:

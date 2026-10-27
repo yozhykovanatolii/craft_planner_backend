@@ -11,7 +11,8 @@ class Settings(BaseSettings):
     postgres_user: str
     neo4j_uri: str 
     neo4j_username: str 
-    neo4j_password: str 
+    neo4j_password: str
+    redis_url: str 
     
     model_config = SettingsConfigDict(env_file=".env")
     
