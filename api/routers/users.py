@@ -1,5 +1,6 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends, File, UploadFile, status
+from pydantic import Field
 from api.dependencies import get_current_user, get_user_service
 from schemas.user import UserInfoSchema, UserUpdateSchema
 from services.user_service import UserService
@@ -22,4 +23,8 @@ async def upload_user_avatar(user_service: UserServiceDependency, current_user: 
     file_bytes = await file.read()
     user_avatar_url = user_service.update_user_avatar(current_user.id, file_bytes, file.content_type, file.filename)
     return {'avatar_url': user_avatar_url}
+
+@user_router.put('/me/fcm-token', status_code = status.HTTP_204_NO_CONTENT)
+async def update_user_fcm_token(user_service: UserServiceDependency, current_user: CurrentUser, fcm_token: str = Field(min_length=1)):
+    await user_service.update_user_fcm_token(current_user.id, fcm_token)
     

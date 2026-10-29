@@ -25,3 +25,11 @@ class UserRepository:
     async def update_user(self, update_data: dict):
         await self.__db.execute(update(User), [update_data])
         await self.__db.commit()
+        
+    async def update_user_fcm_token(self, user_id: int, fcm_token: str):
+        await self.__db.execute(
+            update(User)
+            .where(User.id == user_id)
+            .values(fcm_token=fcm_token),
+        )
+        await self.__db.commit()

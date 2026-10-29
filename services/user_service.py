@@ -31,3 +31,6 @@ class UserService:
         if content_type not in ALLOWED_TYPES:
             raise MediaTypeException()
         return self.__supabase_storage_client.save_image(user_id, file, content_type, filename)
+    
+    async def update_user_fcm_token(self, user_id: int, fcm_token: str):
+        await self.__user_repository.update_user_fcm_token(user_id, fcm_token)
