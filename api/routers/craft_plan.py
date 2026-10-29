@@ -3,15 +3,26 @@ from fastapi import APIRouter, Depends, File, Form, UploadFile, status
 from api.dependencies import get_current_user, get_craft_plan_service
 from schemas.user import UserInfoSchema
 from services.craft_plan_service import CraftPlanService
+from taskiq_app import generate_craft_plan, recalculate_plan
 
 craft_plan_router = APIRouter(prefix='/craft-plans')
 CraftPlanServiceDependency = Annotated[CraftPlanService, Depends(get_craft_plan_service)]
 CurrentUser = Annotated[UserInfoSchema, Depends(get_current_user)]
 
-@craft_plan_router.post('', status_code = status.HTTP_201_CREATED)
+@craft_plan_router.post('', status_code = status.HTTP_202_ACCEPTED)
 async def create_craft_plan(target_name: Annotated[str, Form(min_length=2, strip_whitespace=True)], target_quantity: Annotated[int, Form(ge=1, le=10)], player_file: Annotated[UploadFile, File()], craft_plan_service: CraftPlanServiceDependency, current_user: CurrentUser):
     file_bytes = await player_file.read()
-    await craft_plan_service.create_craft_plan(target_name, target_quantity, file_bytes, player_file.filename, current_user.id)
+    player_inventory, recipe_ingredients, target_item_id = await craft_plan_service.prepare_craft_plan(target_name, target_quantity, file_bytes, player_file.filename, current_user.id)
+    task = await generate_craft_plan.kiq(
+        target_name=target_name,
+        target_quantity=target_quantity,
+        player_inventory=player_inventory,
+        recipe_ingredients=recipe_ingredients,
+        target_item_id=target_item_id,
+        user_id=current_user.id,
+    )
+    return {"task_id": task.task_id}   
+    
     
 @craft_plan_router.delete('/{plan_id}', status_code = status.HTTP_204_NO_CONTENT)
 async def delete_craft_plan(plan_id: int, craft_plan_service: CraftPlanServiceDependency, current_user: CurrentUser):
@@ -25,7 +36,14 @@ async def get_craft_plans(craft_plan_service: CraftPlanServiceDependency, curren
 async def get_craft_plan(plan_id: int, craft_plan_service: CraftPlanServiceDependency, current_user: CurrentUser):
     return await craft_plan_service.get_user_craft_plan(current_user.id, plan_id)
 
-@craft_plan_router.patch('/{plan_id}/recalculate', status_code = status.HTTP_200_OK)
+@craft_plan_router.patch('/{plan_id}/recalculate', status_code = status.HTTP_202_ACCEPTED)
 async def recalculate_craft_plan(plan_id: int, player_file: Annotated[UploadFile, File()], craft_plan_service: CraftPlanServiceDependency, current_user: CurrentUser):
     file_bytes = await player_file.read()
-    await craft_plan_service.recalculate_craft_plan(current_user.id, plan_id, file_bytes, player_file.filename)
+    player_inventory, recipe_ingredients, target_item_id = await craft_plan_service.prepare_craft_plan_recalculation(current_user.id, plan_id, file_bytes, player_file.filename)
+    task = await recalculate_plan.kiq(
+        plan_id=plan_id,
+        player_inventory=player_inventory,
+        recipe_ingredients=recipe_ingredients,
+        target_item_id=target_item_id,
+    )
+    return {"task_id": task.task_id}

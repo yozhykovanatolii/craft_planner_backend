@@ -13,9 +13,8 @@ class CraftPlanService:
         self.__recipe_repository = recipe_repository
         self.__craft_plan_repository = craft_plan_repository    
         
-    async def create_craft_plan(self, target_name: str, target_quantity: int, file_bytes, file_path: str, user_id: int):
+    async def prepare_craft_plan(self, target_name: str, target_quantity: int, file_bytes, file_path: str, user_id: int):
         player_unlocked_recipes, player_inventory = parse_player_save_file(file_bytes, file_path)
-        working_inventory = player_inventory.copy()
         recipe_records = await self.__recipe_repository.get_recipe_ingredients_by_item_name(target_name)
         if not recipe_records:
             raise RecipeNotFoundException()
@@ -24,6 +23,10 @@ class CraftPlanService:
         target_item_id = recipe_records['item_id']
         if recipe_id not in player_unlocked_recipes:
             raise RecipeLockedException(recipe_id)
+        return player_inventory, recipe_ingredients, target_item_id
+        
+    async def calculate_craft_plan(self, target_name: str, target_quantity: int, user_id: int, player_inventory, recipe_ingredients, target_item_id):
+        working_inventory = player_inventory.copy()
         remaining_quantity = target_quantity - working_inventory.get(target_item_id, 0)
         if remaining_quantity <= 0:
             await self.__craft_plan_repository.create_craft_plan(user_id, target_name, target_quantity)
@@ -124,9 +127,8 @@ class CraftPlanService:
             raise AccessDeniedException()
         return CraftPlanInfoSchema.model_validate(db_craft_plan)
     
-    async def recalculate_craft_plan(self, user_id: int, plan_id: int, file_bytes, file_path: str):
+    async def prepare_craft_plan_recalculation(self, user_id: int, plan_id: int, file_bytes, file_path: str):
         _, player_inventory = parse_player_save_file(file_bytes, file_path)
-        working_inventory = player_inventory.copy()
         db_craft_plan = await self.__craft_plan_repository.get_craft_plan_by_id(plan_id)
         if db_craft_plan is None:
             raise CraftPlanNotFoundException()
@@ -137,6 +139,11 @@ class CraftPlanService:
             raise RecipeNotFoundException()
         target_item_id = recipe_records['item_id']
         recipe_ingredients = recipe_records['ingredients']
+        return player_inventory, recipe_ingredients, target_item_id
+        
+    async def recalculate_craft_plan(self, plan_id, player_inventory, recipe_ingredients, target_item_id):
+        working_inventory = player_inventory.copy()
+        db_craft_plan = await self.__craft_plan_repository.get_craft_plan_by_id(plan_id)
         remaining_quantity = db_craft_plan.target_item_quantity - working_inventory.get(target_item_id, 0)
         if remaining_quantity <= 0:
             db_craft_plan.status = 'Completed'
@@ -159,6 +166,7 @@ class CraftPlanService:
         db_craft_plan.ingredients_to_craft = ingredients_need_craft
         db_craft_plan.required_components = items_need_find
         await self.__craft_plan_repository.update_craft_plan(db_craft_plan)
+        
 
     def __check_inventory(self, ingredients: list[dict], player_inventory: dict[str, int]):
         for ingredient in ingredients:
