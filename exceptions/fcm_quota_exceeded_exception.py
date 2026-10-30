@@ -1,0 +1,2 @@
+class FCMQuotaExceededException(Exception):
+    pass

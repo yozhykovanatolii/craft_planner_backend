@@ -4,7 +4,10 @@ from api.dependencies import get_craft_plan_repository, get_recipe_repository, g
 from clients.firebase_client import send_push_notification
 from config import settings
 from taskiq_redis import RedisStreamBroker
-from taskiq import TaskiqDepends
+from taskiq import SmartRetryMiddleware, TaskiqDepends
+from exceptions.invalid_fcm_token_exception import InvalidFcmTokenException
+from exceptions.fcm_service_unavailable_exception import FCMServiceUnavailableException
+from exceptions.fcm_quota_exceeded_exception import FCMQuotaExceededException
 from repositories.craft_plan_repository import CraftPlanRepository
 from repositories.recipe_repository import RecipeRepository
 from repositories.user_repository import UserRepository
@@ -12,12 +15,18 @@ from services.craft_plan_service import CraftPlanService
 
 broker = RedisStreamBroker(
     url=settings.redis_url,
-)
+).with_middlewares(SmartRetryMiddleware(
+    default_retry_count=4,
+    default_delay=10,
+    use_jitter=True,
+    use_delay_exponent=True,
+    max_delay_exponent=120,
+))
 
 def get_taskiq_craft_plan_service(recipe_repository: Annotated[RecipeRepository, TaskiqDepends(get_recipe_repository)], craft_plan_repository: Annotated[CraftPlanRepository, TaskiqDepends(get_craft_plan_repository)]):
     return CraftPlanService(recipe_repository, craft_plan_repository)
 
-@broker.task(retry_on_error=True)
+@broker.taskыы
 async def generate_craft_plan(target_name: str, target_quantity: int, user_id: int, player_inventory, recipe_ingredients, target_item_id, craft_plan_service: Annotated[CraftPlanService, TaskiqDepends(get_taskiq_craft_plan_service)]):
     await craft_plan_service.calculate_craft_plan(target_name, target_quantity, user_id, player_inventory, recipe_ingredients, target_item_id)
     await send_notification_to_user.kiq(
@@ -35,9 +44,17 @@ async def recalculate_plan(plan_id, user_id, player_inventory, recipe_ingredient
         message_body="Your craft plan was recalculated. Check new results.",
     )
       
-@broker.task()
+@broker.task(retry_on_error=True, types_of_exceptions=[FCMServiceUnavailableException, FCMQuotaExceededException])
 async def send_notification_to_user(user_id: int, message_title: str, message_body: str, user_repository: Annotated[UserRepository, TaskiqDepends(get_user_repository)]):
     user_fcm_token = await user_repository.get_user_fcm_token(user_id)
     if user_fcm_token is None:
         return
-    await asyncio.to_thread(send_push_notification, fcm_token=user_fcm_token, title=message_title, body=message_body)
+    try:
+        await asyncio.to_thread(send_push_notification, fcm_token=user_fcm_token, title=message_title, body=message_body)
+    except InvalidFcmTokenException:
+        await user_repository.clear_user_fcm_token(user_id, user_fcm_token)
+        return
+    except FCMServiceUnavailableException as fcm_service_exception:
+        raise fcm_service_exception
+    except FCMQuotaExceededException as fcm_quota_exception:
+        raise fcm_quota_exception

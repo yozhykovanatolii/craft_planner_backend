@@ -1,0 +1,2 @@
+class FCMServiceUnavailableException(Exception):
+    pass

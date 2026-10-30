@@ -1,0 +1,2 @@
+class InvalidFcmTokenException(Exception):
+    pass
