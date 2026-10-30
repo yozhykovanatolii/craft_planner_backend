@@ -1,8 +1,8 @@
 from typing import Annotated
 from fastapi import APIRouter, Depends, status
-from api.dependencies import get_auth_service
+from api.dependencies import get_auth_service, get_current_user
 from schemas.token import TokenSchema
-from schemas.user import UserLoginSchema, UserRegisterSchema
+from schemas.user import UserInfoSchema, UserLoginSchema, UserRegisterSchema
 from services.auth_service import AuthService
 
 auth_router = APIRouter(prefix='/auth')
@@ -20,3 +20,8 @@ async def login_user(user_login: UserLoginSchema, auth_service: AuthServiceDepen
 @auth_router.post('/refresh', status_code = status.HTTP_200_OK, response_model = TokenSchema, response_model_exclude_none = True)
 async def refresh_token(token: str | None, auth_service: AuthServiceDependency):
     return await auth_service.refresh_token(token)
+
+
+@auth_router.post('/logout', status_code = status.HTTP_204_NO_CONTENT)
+async def logout_user(auth_service: AuthServiceDependency, current_user: Annotated[UserInfoSchema, Depends(get_current_user)]):
+    await auth_service.logout_user(current_user.id)

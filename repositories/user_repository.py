@@ -26,7 +26,7 @@ class UserRepository:
         await self.__db.execute(update(User), [update_data])
         await self.__db.commit()
         
-    async def update_user_fcm_token(self, user_id: int, fcm_token: str):
+    async def update_user_fcm_token(self, user_id: int, fcm_token: str | None = None):
         await self.__db.execute(
             update(User)
             .where(User.id == user_id)
@@ -38,11 +38,3 @@ class UserRepository:
         query = select(User.fcm_token).where(User.id == user_id)
         result = await self.__db.execute(query)
         return result.scalar_one_or_none()
-    
-    async def clear_user_fcm_token(self, user_id: int, fcm_token: str):
-        await self.__db.execute(
-            update(User)
-            .where(User.id == user_id, User.fcm_token == fcm_token)
-            .values(fcm_token=None),
-        )
-        await self.__db.commit()

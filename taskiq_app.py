@@ -52,7 +52,7 @@ async def send_notification_to_user(user_id: int, message_title: str, message_bo
     try:
         await asyncio.to_thread(send_push_notification, fcm_token=user_fcm_token, title=message_title, body=message_body)
     except InvalidFcmTokenException:
-        await user_repository.clear_user_fcm_token(user_id, user_fcm_token)
+        await user_repository.update_user_fcm_token(user_id)
         return
     except FCMServiceUnavailableException as fcm_service_exception:
         raise fcm_service_exception

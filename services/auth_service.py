@@ -38,3 +38,6 @@ class AuthService:
             raise UserNotFoundException()
         access_token = create_token(token_data = {'sub': str(user_id)}, expires_time_minutes = 30, token_type = 'access')
         return TokenSchema(access_token = access_token)
+    
+    async def logout_user(self, user_id: int):
+        await self.__user_repository.update_user_fcm_token(user_id)
