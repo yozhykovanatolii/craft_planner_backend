@@ -12,7 +12,8 @@ class Settings(BaseSettings):
     neo4j_uri: str 
     neo4j_username: str 
     neo4j_password: str
-    redis_url: str 
+    redis_url: str
+    firebase_application_credentials: str 
     
     model_config = SettingsConfigDict(env_file=".env")
     

@@ -33,3 +33,8 @@ class UserRepository:
             .values(fcm_token=fcm_token),
         )
         await self.__db.commit()
+        
+    async def get_user_fcm_token(self, user_id: int):
+        query = select(User.fcm_token).where(User.id == user_id)
+        result = await self.__db.execute(query)
+        return result.scalar_one_or_none()

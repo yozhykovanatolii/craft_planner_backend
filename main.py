@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from clients.firebase_client import init_firebase_sdk
 from database.postgresql import init_postgresql_db
 from database import neo4j
 from api.router import api_router
@@ -9,6 +10,7 @@ from taskiq_app import broker
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
+    init_firebase_sdk()
     await broker.startup()
     await init_postgresql_db()
     await neo4j.connect_neo4j()

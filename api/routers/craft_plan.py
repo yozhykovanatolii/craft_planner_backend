@@ -41,6 +41,7 @@ async def recalculate_craft_plan(plan_id: int, player_file: Annotated[UploadFile
     file_bytes = await player_file.read()
     player_inventory, recipe_ingredients, target_item_id = await craft_plan_service.prepare_craft_plan_recalculation(current_user.id, plan_id, file_bytes, player_file.filename)
     task = await recalculate_plan.kiq(
+        user_id=current_user.id,
         plan_id=plan_id,
         player_inventory=player_inventory,
         recipe_ingredients=recipe_ingredients,
