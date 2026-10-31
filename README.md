@@ -19,6 +19,7 @@ Instead of manually calculating nested crafting dependencies, the application an
 * 🔗 **Dependency Resolution** – Resolve nested crafting dependencies using a graph-based approach
 * 🎒 **Inventory Analysis** – Take the player's current inventory into account when calculating missing resources
 * 📋 **Craft Plans** – Create, retrieve, recalculate and delete saved crafting plans
+* 🔔 **Push Notifications** – Receive notifications after successful craft plan creation and recalculation
 * 📊 **Resource Usage** – Find items that directly use a specific resource
 * 🧭 **Usage Paths** – Find a dependency path between a resource and a target item
 * 💾 **Save File Parsing** – Extract player inventory and unlocked recipes from save files
@@ -45,12 +46,17 @@ Instead of manually calculating nested crafting dependencies, the application an
 - **JWT** – Access and refresh token authentication
 - **pwdlib** – Password hashing
 
+**Background Tasks**
+- **Taskiq** – Asynchronous background task processing
+- **Redis** – Message broker for background task execution
+
 **Infrastructure**
 - **Docker** – Containerization
 - **Docker Compose** – Multi-container application setup
 
 **External Services**
 - **Supabase Storage** – File storage for user uploads and media management
+- **Firebase Cloud Messaging (FCM)** – Push notification delivery
 
 ## 🚀 Getting Started
 
@@ -103,12 +109,24 @@ POSTGRES_DB=craft_planner
 POSTGRES_USER=postgres
 
 #Neo4j
-NEO4J_URI=bolt://localhost:7687
+NEO4J_URI=bolt://neo4j:7687
 NEO4J_USERNAME=neo4j
 NEO4J_PASSWORD=password123
+
+#Redis
+REDIS_URL=redis://redis:6379/0
+
+#Firebase
+FIREBASE_APPLICATION_CREDENTIALS=
 ```
 
-3. Run the application
+4. Configure Firebase
+
+Create a project in the Firebase Console and download the firebase-service-account.json file from Project Settings → Service Accounts → Generate new private key.
+
+Set the path to the downloaded file in the FIREBASE_APPLICATION_CREDENTIALS environment variable in your .env file.
+
+5. Run the application
 ```
 docker compose up --build
 ```
@@ -137,7 +155,8 @@ The API and API documentation will be available at: http://localhost:8000 and ht
 ├── models.py                 # SQLAlchemy models
 ├── recipes.json              # Game recipes data
 ├── requirements.txt          # Python dependencies
-└── security.py               # Authentication and security
+├── security.py               # Authentication and security
+└── taskiq_app.py             # Taskiq broker and worker configuration
 ```
 
 ## 📡 API Endpoints
